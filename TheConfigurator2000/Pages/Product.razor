@@ -1,0 +1,55 @@
+﻿@page "/product/{id}"
+@inject TheConfigurator2000.Data.IProductsService ProductService
+@inject NavigationManager Navigation
+
+<h3>Product</h3>
+
+<EditForm Model="product" OnSubmit="SubmitForm">
+    <div class="form-group">
+        <label>ID</label>
+        <input id="id" name="id"  class="form-control" value="@product.Id" readonly />
+    </div>
+    <div class="form-group">
+        <label>Name</label>
+        <InputText id="name" class="form-control" name="name" @bind-Value="product.Name"></InputText>
+    </div>
+    <div class="form-group">
+        <label>Price</label>
+        <InputNumber id="price" class="form-control" name="price" @bind-Value="product.Price"></InputNumber>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private Classes.Product product { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (!String.IsNullOrEmpty(Id) & Id == "0")
+        {
+            product = new Classes.Product();
+        }
+        else{
+            product = ProductService.GetProduct(Guid.Parse(Id));
+        }
+    }
+    void SubmitForm()
+    {
+
+        if (product.Id == Guid.Empty)
+        {
+            ProductService.AddProduct(product);
+        }
+        else
+        {
+            ProductService.UpdateProduct(product);
+        }
+        Navigation.NavigateTo("products");
+    }
+
+}

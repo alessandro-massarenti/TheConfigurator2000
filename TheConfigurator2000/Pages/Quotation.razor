@@ -1,0 +1,117 @@
+﻿@page "/quotation/{id}"
+@inject TheConfigurator2000.Data.IQuotationService QuotationService
+@inject TheConfigurator2000.Data.IProductsService ProductService
+@inject NavigationManager Navigation
+
+<h3>Quotation</h3>
+
+<EditForm Model="quotation" OnSubmit="SubmitForm">
+    <div class="form-group">
+        <label>ID</label>
+        <input id="id" name="id" class="form-control"  value="@quotation.Id" readonly/>
+    </div>
+    <div class="form-group">
+        <label>Name</label>
+        <InputText id="name" class="form-control" name="name" @bind-Value="quotation.Name"></InputText>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</EditForm>
+
+<div class="row">
+    <table class="table col-md-6">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Price</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                    <td>
+                        <button @onclick="@(p => OnAdd(product.Id))" class="btn btn-info">Add</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <table class="table col-md-6">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Price</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in quotationProducts)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                    <td>
+                        <button @onclick="@(p => OnAdd(product.Id))" class="btn btn-danger">Remove</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private Classes.Quotation quotation { get; set; }
+
+    private List<Classes.Product> products { get; set; }
+
+    private List<Classes.Product> quotationProducts { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if(!string.IsNullOrEmpty(Id) & Id == "0")
+        {
+            quotation = new Classes.Quotation();
+        }
+        else
+        {
+            quotation = QuotationService.GetQuotation(Guid.Parse(Id));
+        }
+
+        products = ProductService.GetProducts();
+        quotationProducts = quotation.Products;
+
+    }
+
+    void SubmitForm()
+    {
+        if(quotation.Id == Guid.Empty)
+        {
+            QuotationService.AddQuotation(quotation);
+        }
+        else
+        {
+            QuotationService.UpdateQuotation(quotation);
+        }
+
+        Navigation.NavigateTo("quotations");
+    }
+
+    private void OnAdd(Guid id)
+    {
+        var product = ProductService.GetProduct(id);
+        QuotationService.AddProductToQuotation(product,quotation);
+    }
+    private void OnRemove(Guid id)
+    {
+        var product = ProductService.GetProduct(id);
+        QuotationService.RemoveProductFromQuotation(product,quotation);
+    }
+}

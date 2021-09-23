@@ -1,0 +1,53 @@
+﻿@page "/quotations"
+@inject TheConfigurator2000.Data.IQuotationService QuotationService
+@inject NavigationManager Navigation
+
+<h3>Quotations</h3>
+
+<a href="quotation/0"> Add Quotation </a>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Products inserted</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var quotation in quotations)
+        {
+        <tr>
+            <td>@quotation.Id</td>
+            <td>@quotation.Name</td>
+            <td>@quotation.Products.Count</td>
+            <td>
+                <button @onclick="@(p => OnEdit(quotation.Id))" class="btn btn-primary">Edit</button>
+                <button @onclick="@(p => OnDelete(quotation.Id))" class="btn btn-dark">Delete</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    private List<Classes.Quotation> quotations;
+
+    protected override void OnInitialized()
+    {
+        quotations = QuotationService.GetQuotations();
+    }
+
+    private void OnDelete(Guid id)
+    {
+        QuotationService.DeleteQuotation(id);
+    }
+
+    private void OnEdit(Guid id)
+    {
+        Navigation.NavigateTo("quotation/" + id);
+    }
+
+
+}

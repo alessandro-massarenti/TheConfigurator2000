@@ -1,0 +1,52 @@
+﻿@page "/products"
+@inject TheConfigurator2000.Data.IProductsService ProductService
+@inject NavigationManager Navigation
+
+<h3>Products</h3>
+<a href="product/0">Add product</a>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Price</td>
+            <td></td>s
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var product in products)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                    <td>
+                        <button @onclick="@(p => OnEdit(product.Id))" class="btn btn-primary">Edit</button>
+                        <button @onclick="@(p => OnDelete(product.Id))" class="btn btn-dark" >Delete</button>
+                    </td>
+                </tr>
+            }
+    </tbody>
+    
+</table>
+
+@code {
+
+    private List<Classes.Product> products;
+
+    protected override void OnInitialized()
+    {
+        products = ProductService.GetProducts();
+    }
+
+    private void OnDelete(Guid id)
+    {
+        ProductService.DeleteProduct(id);
+    }
+
+    private void OnEdit(Guid id)
+    {
+        Navigation.NavigateTo("product/" + id);
+    }
+
+}
