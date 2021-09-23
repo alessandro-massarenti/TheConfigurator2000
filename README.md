@@ -6,3 +6,5 @@
 
 
 Questo video è stato sbloccante a dir poco https://youtu.be/-nTJqx0t29I
+
+Questo applicativo non usa il db al momento, ma implementare Entity Framework sarà davvero molto semplice per via della separazione tra le varie classi e connessioni.
