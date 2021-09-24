@@ -32,6 +32,7 @@ namespace TheConfigurator2000
             services.AddSingleton<IProductsService, ProductService>();
             services.AddSingleton<IQuotationService, QuotationService>();
             services.AddSingleton<IReportService, ReportService>();
+            services.AddDbContext<TheConfigurator2000.Context.AppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

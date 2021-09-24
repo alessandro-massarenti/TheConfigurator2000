@@ -11,5 +11,8 @@ namespace TheConfigurator2000.Classes
         public Guid Id { get; set; }
         public String Name { get; set; }
         public double Price { get; set; }
+
+        //Navigation properties
+        public List<Quotation> Quotations { get; set; }
     }
 }

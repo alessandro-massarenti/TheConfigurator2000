@@ -8,42 +8,35 @@ namespace TheConfigurator2000.Data
 {
     public class ProductService : IProductsService
     {
-        private List<Product> Products = new()
-        {
-            new Product {
-                Id = Guid.NewGuid(),
-                Name = "Prodotto1",
-                Price = 25
-            },
-            new Product {
-                Id = Guid.NewGuid(),
-                Name = "Prodotto2",
-                Price = 23
-            }
-        };
 
         public void AddProduct(Product product)
         {
             var id = Guid.NewGuid();
             product.Id = id;
-            Products.Add(product);
 
+            using var context = new Context.AppDbContext();
+
+            context.Products.Add(product);
+
+            context.SaveChanges();
         }
 
         public void DeleteProduct(Guid id)
         {
-            var product = GetProduct(id);
-            Products.Remove(product);
+            using var context = new Context.AppDbContext();
+            context.Products.Remove(GetProduct(id));
         }
 
         public Product GetProduct(Guid id)
         {
-            return Products.SingleOrDefault(x => x.Id == id);
+            using var context = new Context.AppDbContext();
+            return context.Products.SingleOrDefault(p => p.Id == id);
         }
 
         public List<Product> GetProducts()
         {
-            return Products;
+            using var context = new Context.AppDbContext();
+            return context.Products.ToList();
         }
 
         public void UpdateProduct(Product product)
@@ -53,6 +46,34 @@ namespace TheConfigurator2000.Data
             oldProduct.Name = product.Name;
             oldProduct.Price = product.Price;
 
+            using (var context = new Context.AppDbContext())
+            {
+                context.Attach(oldProduct).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
+                {
+                    if (!QuotationExists(product.Id))
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+
+                }
+            }
+
+        }
+
+        private static bool QuotationExists(Guid id)
+        {
+            using var context = new Context.AppDbContext();
+            return context.Products.Any(e => e.Id == id);
         }
     }
 }
