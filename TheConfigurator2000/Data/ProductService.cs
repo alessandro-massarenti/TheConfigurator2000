@@ -25,6 +25,7 @@ namespace TheConfigurator2000.Data
         {
             using var context = new Context.AppDbContext();
             context.Products.Remove(GetProduct(id));
+            context.SaveChanges();
         }
 
         public Product GetProduct(Guid id)
@@ -41,36 +42,32 @@ namespace TheConfigurator2000.Data
 
         public void UpdateProduct(Product product)
         {
-            var oldProduct = GetProduct(product.Id);
+            Product oldProduct = GetProduct(product.Id);
 
             oldProduct.Name = product.Name;
             oldProduct.Price = product.Price;
 
-            using (var context = new Context.AppDbContext())
+            using var context = new Context.AppDbContext();
+            context.Attach(oldProduct).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            try
             {
-                context.Attach(oldProduct).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
-                try
+                context.SaveChanges();
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
+            {
+                if (!ProductExists(product.Id))
                 {
-                    context.SaveChanges();
+                    return;
                 }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
+                else
                 {
-                    if (!QuotationExists(product.Id))
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-
+                    throw;
                 }
             }
-
         }
 
-        private static bool QuotationExists(Guid id)
+        private static bool ProductExists(Guid id)
         {
             using var context = new Context.AppDbContext();
             return context.Products.Any(e => e.Id == id);

@@ -10,7 +10,7 @@ using TheConfigurator2000.Context;
 namespace TheConfigurator2000.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210924094142_Initialization")]
+    [Migration("20210924123744_Initialization")]
     partial class Initialization
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

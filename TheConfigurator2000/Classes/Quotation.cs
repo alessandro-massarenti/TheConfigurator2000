@@ -11,6 +11,8 @@ namespace TheConfigurator2000.Classes
         public string Name { get; set; }
         public List<Product> Products { get; set; } = new();
 
+        //public virtual ICollection<QuotationProductMapping> QuotationProductMappings { get; set; }
+
         public double GetTotalPrice()
         {
             double total = 0;

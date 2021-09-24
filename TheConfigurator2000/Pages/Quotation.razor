@@ -66,8 +66,6 @@
     </div>
 </div>
 
-
-
 @code {
     [Parameter]
     public string Id { get; set; }
@@ -118,16 +116,39 @@
         {
             QuotationService.UpdateQuotation(quotation);
         }
+
+        Navigation.NavigateTo("/quotation/" + quotation.Id);
     }
 
     private void OnAdd(Guid id)
     {
         var product = ProductService.GetProduct(id);
         QuotationService.AddProductToQuotation(product,quotation);
+        quotation = QuotationService.GetQuotation(id);
     }
     private void OnRemove(Guid id)
     {
         var product = ProductService.GetProduct(id);
         QuotationService.RemoveProductFromQuotation(product,quotation);
     }
+
+    //private string test()
+    //{
+    //    using var context = new Context.AppDbContext();
+
+    //    var q = context.Quotations.First();
+    //    //List<TheConfigurator2000.Classes.Product> products = context.Quotations.First().Products.ToList();
+
+    //    //Carica i prodotti
+    //    context.Entry(q).Collection (s => s.Products).Load(); // loads products
+
+    //    string stringa = "stringa vuota";
+
+    //    foreach(var product in q.Products)
+    //    {
+    //        stringa += product.Name;
+    //    }
+
+    //    return stringa;
+    //}
 }
