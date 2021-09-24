@@ -18,48 +18,52 @@
 </EditForm>
 
 <div class="row">
-    <table class="table col-md-6">
-        <thead>
-            <tr>
-                <td>Name</td>
-                <td>Price</td>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in products)
-            {
+    <div class="col-md-6">
+        <table  class="table">
+            <thead>
                 <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Price</td>
-                    <td>
-                        <button @onclick="@(p => OnAdd(product.Id))" class="btn btn-info">Add</button>
-                    </td>
+                    <td>Name</td>
+                    <td>Price</td>
+                    <td></td>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <table class="table col-md-6">
-        <thead>
-            <tr>
-                <td>Name</td>
-                <td>Price</td>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in quotationProducts)
-            {
+            </thead>
+            <tbody>
+                @foreach (var product in products)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Price</td>
+                        <td>
+                            <button @onclick="@(p => OnAdd(product.Id))" class="btn btn-info">Add</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Price</td>
-                    <td>
-                        <button @onclick="@(p => OnAdd(product.Id))" class="btn btn-danger">Remove</button>
-                    </td>
+                    <td>Name</td>
+                    <td>Price</td>
+                    <td></td>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var product in quotationProducts)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Price</td>
+                        <td>
+                            <button @onclick="@(p => OnRemove(product.Id))" class="btn btn-danger">Remove</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 

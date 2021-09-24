@@ -31,6 +31,7 @@ namespace TheConfigurator2000
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<IProductsService, ProductService>();
             services.AddSingleton<IQuotationService, QuotationService>();
+            services.AddSingleton<IReportService, ReportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
