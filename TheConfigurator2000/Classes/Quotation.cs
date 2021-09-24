@@ -11,5 +11,16 @@ namespace TheConfigurator2000.Classes
         public string Name { get; set; }
         public List<Product> Products { get; set; } = new();
 
+        public double GetTotalPrice()
+        {
+            double total = 0;
+            foreach (var product in Products)
+            {
+                total += product.Price;
+            }
+
+            return total;
+        }
+
     }
 }

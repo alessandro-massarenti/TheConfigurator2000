@@ -33,8 +33,9 @@ namespace TheConfigurator2000.Data
 
             //Title
             gfx.DrawString(quotation.Name, titleFont, XBrushes.Black,
-                new XPoint(200, 70),
-                XStringFormats.Center);
+                new XPoint(200, 70));
+            gfx.DrawString("€ "+quotation.GetTotalPrice().ToString(), bodyFont, XBrushes.Black,
+                new XPoint(400, 70));
             gfx.DrawLine(blackPen,
                 new XPoint(100, 100),
                 new XPoint(500, 100));
@@ -52,7 +53,7 @@ namespace TheConfigurator2000.Data
             //Table body
             foreach (var product in quotation.Products)
             {
-                if(counter == 20)
+                if(counter == 25)
                 {
                     page = document.AddPage();
                     gfx = XGraphics.FromPdfPage(page);
