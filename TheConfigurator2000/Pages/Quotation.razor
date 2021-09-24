@@ -12,7 +12,7 @@
     </div>
     <div class="form-group">
         <label>Name</label>
-        <InputText id="name" class="form-control" name="name" @bind-Value="quotation.Name"></InputText>
+        <InputText id="name" class="form-control" name="name" @bind-Value="quotation.Name" @onfocusout="@(p => OnFocusOut())"></InputText>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </EditForm>
@@ -106,6 +106,18 @@
         }
 
         Navigation.NavigateTo("quotations");
+    }
+
+    void OnFocusOut()
+    {
+        if (quotation.Id == Guid.Empty)
+        {
+            QuotationService.AddQuotation(quotation);
+        }
+        else
+        {
+            QuotationService.UpdateQuotation(quotation);
+        }
     }
 
     private void OnAdd(Guid id)

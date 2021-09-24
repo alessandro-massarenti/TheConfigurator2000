@@ -15,13 +15,11 @@ namespace TheConfigurator2000.Data
             {
                 Id = Guid.NewGuid(),
                 Name = "Quotazione1",
-                Products = new()
             },
             new Quotation
             {
                 Id = Guid.NewGuid(),
                 Name = "Qutoazione2",
-                Products = new()
             }
         };
 
