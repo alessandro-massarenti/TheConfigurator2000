@@ -84,7 +84,7 @@
         }
         else
         {
-            quotation = QuotationService.GetQuotation(Guid.Parse(Id));
+            Load();
         }
 
         products = ProductService.GetProducts();
@@ -124,12 +124,19 @@
     {
         var product = ProductService.GetProduct(id);
         QuotationService.AddProductToQuotation(product,quotation);
-        quotation = QuotationService.GetQuotation(id);
+        Load();
     }
     private void OnRemove(Guid id)
     {
         var product = ProductService.GetProduct(id);
         QuotationService.RemoveProductFromQuotation(product,quotation);
+        Load();
+    }
+
+    private void Load()
+    {
+        quotation = QuotationService.GetQuotation(Guid.Parse(Id));
+        quotationProducts = quotation.Products;
     }
 
     //private string test()
