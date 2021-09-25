@@ -36,12 +36,13 @@
 
     protected override void OnInitialized()
     {
-        products = ProductService.GetProducts();
+        Load();
     }
 
     private void OnDelete(Guid id)
     {
         ProductService.DeleteProduct(id);
+        Load();
     }
 
     private void OnEdit(Guid id)
@@ -49,4 +50,8 @@
         Navigation.NavigateTo("product/" + id);
     }
 
+    private void Load()
+    {
+        products = ProductService.GetProducts();
+    }
 }
