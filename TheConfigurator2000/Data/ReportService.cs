@@ -29,12 +29,12 @@ namespace TheConfigurator2000.Data
 
             XGraphics gfx = XGraphics.FromPdfPage(page);
 
-            
+
 
             //Title
             gfx.DrawString(quotation.Name, titleFont, XBrushes.Black,
                 new XPoint(200, 70));
-            gfx.DrawString("€ "+quotation.GetTotalPrice().ToString(), bodyFont, XBrushes.Black,
+            gfx.DrawString("€ " + quotation.GetTotalPrice().ToString(), bodyFont, XBrushes.Black,
                 new XPoint(400, 70));
             gfx.DrawLine(blackPen,
                 new XPoint(100, 100),
@@ -51,34 +51,34 @@ namespace TheConfigurator2000.Data
             int counter = 0;
 
             //Table body
-            foreach (var product in quotation.Products)
-            {
-                if(counter == 25)
-                {
-                    page = document.AddPage();
-                    gfx = XGraphics.FromPdfPage(page);
-                    currentYposition_values = 33;
-                    currentYposition_line = 40;
-                    counter = 0;
-                }
+            //foreach (var product in quotation.ProductsMap)
+            //{
+            //    if (counter == 25)
+            //    {
+            //        page = document.AddPage();
+            //        gfx = XGraphics.FromPdfPage(page);
+            //        currentYposition_values = 33;
+            //        currentYposition_line = 40;
+            //        counter = 0;
+            //    }
 
-                gfx.DrawString(product.Name, bodyFont,
-                    XBrushes.Black,
-                    new XPoint(100,currentYposition_values));
-                gfx.DrawString("€" + product.Price, bodyFont,
-                    XBrushes.Black,
-                    new XPoint(400, currentYposition_values));
+            //    gfx.DrawString(product.Name, bodyFont,
+            //        XBrushes.Black,
+            //        new XPoint(100, currentYposition_values));
+            //    gfx.DrawString("€" + product.Price, bodyFont,
+            //        XBrushes.Black,
+            //        new XPoint(400, currentYposition_values));
 
-                gfx.DrawLine(blackPen,
-                    new XPoint(50, currentYposition_line),
-                    new XPoint(550, currentYposition_line));
+            //    gfx.DrawLine(blackPen,
+            //        new XPoint(50, currentYposition_line),
+            //        new XPoint(550, currentYposition_line));
 
-                currentYposition_values += 20;
-                currentYposition_line += 20;
-                counter++;
-            }
+            //    currentYposition_values += 20;
+            //    currentYposition_line += 20;
+            //    counter++;
+            //}
 
-            document.Save("C:\\Users\\amc002\\Downloads\\"+ quotation.Name +".pdf");
+            document.Save("C:\\Users\\amc002\\Downloads\\" + quotation.Name + ".pdf");
         }
     }
 }

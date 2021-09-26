@@ -41,19 +41,20 @@ namespace TheConfigurator2000.Data
 
             var quotation = context.Quotations.SingleOrDefault(q => q.Id == id);
             if (quotation != null)
-            context.Entry(quotation).Collection(s => s.Products).Load();
+                context.Entry(quotation).Collection(s => s.QuotationProducts).Load();
 
             return quotation;
         }
 
         public List<Quotation> GetQuotations()
         {
-            using (var context = new Context.AppDbContext()){ 
+            using (var context = new Context.AppDbContext())
+            {
 
                 List<Quotation> quotations = context.Quotations.ToList();
                 foreach (var x in quotations)
                 {
-                    context.Entry(x).Collection(s => s.Products).Load();
+                    context.Entry(x).Collection(s => s.QuotationProducts).Load();
                 }
                 return quotations;
             }
@@ -62,22 +63,28 @@ namespace TheConfigurator2000.Data
         public void UpdateQuotation(Quotation quotation)
         {
 
-            using( var context = new Context.AppDbContext()) {
+            using (var context = new Context.AppDbContext())
+            {
 
                 var oldQuotation = context.Quotations.Find(quotation.Id);
 
-            oldQuotation.Name = quotation.Name;
+                oldQuotation.Name = quotation.Name;
 
-            context.SaveChanges();
-        }
+                context.SaveChanges();
+            }
 
         }
 
         public void AddProductToQuotation(Product product, Quotation quotation)
         {
-            using( var context = new Context.AppDbContext()){
+            using (var context = new Context.AppDbContext())
+            {
 
-                context.Quotations.Find(quotation.Id).Products.Add(product);
+                var quotationProduct = new QuotationProduct() { QuotationId = quotation.Id, ProductId = product.Id };
+
+                context.Quotations.Find(quotation.Id).QuotationProducts.Add(quotationProduct);
+
+                //context.Quotations.Find(quotation.Id).QuotationProducts.Find(quotationProduct.QuotationId,quotationProduct.ProductId).Count++;
 
                 context.SaveChanges();
             }
@@ -88,8 +95,8 @@ namespace TheConfigurator2000.Data
             using (var context = new Context.AppDbContext())
             {
                 var quotationInDb = context.Quotations.Find(quotation.Id);
-                context.Entry(quotationInDb).Collection(s => s.Products).Load();
-                quotationInDb.Products.Remove(context.Products.Find(product.Id));
+                context.Entry(quotationInDb).Collection(s => s.QuotationProducts).Load();
+                //quotationInDb.QuotationProducts.Remove(context.Quotations.Find(quotation.Id), context.Products.Find(product.Id));
 
                 context.SaveChanges();
 

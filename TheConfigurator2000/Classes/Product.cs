@@ -16,6 +16,6 @@ namespace TheConfigurator2000.Classes
         public double Price { get; set; }
 
         //Navigation properties
-        public List<Quotation> Quotations { get; set; }
+        public List<QuotationProduct> QuotationProducts { get; set; }
     }
 }

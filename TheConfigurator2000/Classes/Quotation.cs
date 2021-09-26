@@ -9,16 +9,16 @@ namespace TheConfigurator2000.Classes
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<Product> Products { get; set; } = new();
+        public List<QuotationProduct> QuotationProducts { get; set; } = new();
 
         //public virtual ICollection<QuotationProductMapping> QuotationProductMappings { get; set; }
 
         public double GetTotalPrice()
         {
             double total = 0;
-            foreach (var product in Products)
+            foreach (var productMap in QuotationProducts)
             {
-                total += product.Price;
+                total += productMap.Product.Price * productMap.Count;
             }
 
             return total;

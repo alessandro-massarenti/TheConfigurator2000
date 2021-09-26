@@ -54,10 +54,10 @@
                 @foreach (var product in quotationProducts)
                 {
                     <tr>
-                        <td>@product.Name</td>
-                        <td>@product.Price</td>
+                        <td>@product.ProductId</td>
+                        <td>@product.QuotationId</td>
                         <td>
-                            <button @onclick="@(p => OnRemove(product.Id))" class="btn btn-danger">Remove</button>
+                            <button @onclick="@(p => OnRemove(product.ProductId))" class="btn btn-danger">Remove</button>
                         </td>
                     </tr>
                 }
@@ -74,7 +74,7 @@
 
     private List<Classes.Product> products { get; set; }
 
-    private List<Classes.Product> quotationProducts { get; set; }
+    private List<Classes.QuotationProduct> quotationProducts { get; set; }
 
     protected override void OnInitialized()
     {
@@ -88,7 +88,7 @@
         }
 
         products = ProductService.GetProducts();
-        quotationProducts = quotation.Products;
+        quotationProducts = quotation.QuotationProducts;
 
     }
 
@@ -136,8 +136,9 @@
     private void Load()
     {
         quotation = QuotationService.GetQuotation(Guid.Parse(Id));
-        quotationProducts = quotation.Products;
+        quotationProducts = quotation.QuotationProducts;
     }
+
 
     //private string test()
     //{

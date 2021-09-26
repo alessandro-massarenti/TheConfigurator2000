@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheConfigurator2000.Context;
 
 namespace TheConfigurator2000.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210926134853_AddedCountFeature_2")]
+    partial class AddedCountFeature_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,13 +88,13 @@ namespace TheConfigurator2000.Migrations
             modelBuilder.Entity("TheConfigurator2000.Classes.QuotationProduct", b =>
                 {
                     b.HasOne("TheConfigurator2000.Classes.Product", "Product")
-                        .WithMany("QuotationProducts")
+                        .WithMany("Quotations")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TheConfigurator2000.Classes.Quotation", "Quotation")
-                        .WithMany("QuotationProducts")
+                        .WithMany("ProductsMap")
                         .HasForeignKey("QuotationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -104,12 +106,12 @@ namespace TheConfigurator2000.Migrations
 
             modelBuilder.Entity("TheConfigurator2000.Classes.Product", b =>
                 {
-                    b.Navigation("QuotationProducts");
+                    b.Navigation("Quotations");
                 });
 
             modelBuilder.Entity("TheConfigurator2000.Classes.Quotation", b =>
                 {
-                    b.Navigation("QuotationProducts");
+                    b.Navigation("ProductsMap");
                 });
 #pragma warning restore 612, 618
         }

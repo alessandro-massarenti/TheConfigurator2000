@@ -22,7 +22,7 @@
         <tr>
             <td>@quotation.Id</td>
             <td>@quotation.Name</td>
-            <td>@quotation.Products.Count</td>
+            <td>@quotation.QuotationProducts.Count</td>
             <td>€ @quotation.GetTotalPrice()</td>
             <td>
                 <button @onclick="@(p => OnEdit(quotation.Id))" class="btn btn-primary">Edit</button>

@@ -14,7 +14,7 @@ namespace TheConfigurator2000.Context
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Quotation> Quotations { get; set; }
-        //public DbSet<ProductQuotation> ProductQuotations { get; set; }
+        public DbSet<QuotationProduct> QuotationProduct { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,11 +29,11 @@ namespace TheConfigurator2000.Context
         {
             AddCreatedDateColumn(modelBuilder);
 
-            //#region QuotationProductMapping
+            #region QuotationProduct
 
-            //modelBuilder.Entity<QuotationProductMapping>().HasKey(qp => new { qp.QuotationId, qp.ProductId });
+            modelBuilder.Entity<QuotationProduct>().HasKey(qp => new { qp.QuotationId, qp.ProductId });
 
-            //#endregion
+            #endregion
 
         }
 
