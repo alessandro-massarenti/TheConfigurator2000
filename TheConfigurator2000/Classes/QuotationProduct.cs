@@ -14,8 +14,13 @@ namespace TheConfigurator2000.Classes
         public virtual Quotation Quotation { get; set; }
         public virtual Product Product { get; set; }
 
-        public int Count { get; set; }
+        public int Count { get; set; } = 1;
 
+
+        public double GetTotal()
+        {
+            return Product.Price * Count;
+        }
 
     }
 }

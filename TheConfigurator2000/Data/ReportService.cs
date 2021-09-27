@@ -50,33 +50,42 @@ namespace TheConfigurator2000.Data
             int currentYposition_line = 310;
             int counter = 0;
 
-            //Table body
-            //foreach (var product in quotation.ProductsMap)
-            //{
-            //    if (counter == 25)
-            //    {
-            //        page = document.AddPage();
-            //        gfx = XGraphics.FromPdfPage(page);
-            //        currentYposition_values = 33;
-            //        currentYposition_line = 40;
-            //        counter = 0;
-            //    }
+            //table body
+            foreach (var quotationProduct in quotation.QuotationProducts)
+            {
+                if (counter == 25)
+                {
+                    page = document.AddPage();
+                    gfx = XGraphics.FromPdfPage(page);
+                    currentYposition_values = 33;
+                    currentYposition_line = 40;
+                    counter = 0;
+                }
 
-            //    gfx.DrawString(product.Name, bodyFont,
-            //        XBrushes.Black,
-            //        new XPoint(100, currentYposition_values));
-            //    gfx.DrawString("€" + product.Price, bodyFont,
-            //        XBrushes.Black,
-            //        new XPoint(400, currentYposition_values));
+                
 
-            //    gfx.DrawLine(blackPen,
-            //        new XPoint(50, currentYposition_line),
-            //        new XPoint(550, currentYposition_line));
+                gfx.DrawString("Quantity: " + quotationProduct.Count.ToString(), bodyFont,
+                    XBrushes.Black,
+                    new XPoint(100, currentYposition_values));
+                gfx.DrawString("Total of row: €" + quotationProduct.GetTotal(), bodyFont,
+                    XBrushes.Black,
+                    new XPoint(400, currentYposition_values));
 
-            //    currentYposition_values += 20;
-            //    currentYposition_line += 20;
-            //    counter++;
-            //}
+                gfx.DrawString(quotationProduct.Product.Name, bodyFont,
+                    XBrushes.Black,
+                    new XPoint(100, currentYposition_values + 20));
+                gfx.DrawString("€" + quotationProduct.Product.Price, bodyFont,
+                    XBrushes.Black,
+                    new XPoint(400, currentYposition_values + 20));
+
+                gfx.DrawLine(blackPen,
+                    new XPoint(50, currentYposition_line + 20),
+                    new XPoint(550, currentYposition_line + 20));
+
+                currentYposition_values += 40;
+                currentYposition_line += 40;
+                counter++;
+            }
 
             document.Save("C:\\Users\\amc002\\Downloads\\" + quotation.Name + ".pdf");
         }

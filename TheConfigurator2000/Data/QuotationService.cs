@@ -41,7 +41,13 @@ namespace TheConfigurator2000.Data
 
             var quotation = context.Quotations.SingleOrDefault(q => q.Id == id);
             if (quotation != null)
+            {
                 context.Entry(quotation).Collection(s => s.QuotationProducts).Load();
+                foreach (var qp in quotation.QuotationProducts)
+                {
+                    context.Entry(qp).Reference(t => t.Product).Load();
+                }
+            }
 
             return quotation;
         }
@@ -52,9 +58,13 @@ namespace TheConfigurator2000.Data
             {
 
                 List<Quotation> quotations = context.Quotations.ToList();
-                foreach (var x in quotations)
+                foreach (var q in quotations)
                 {
-                    context.Entry(x).Collection(s => s.QuotationProducts).Load();
+                    context.Entry(q).Collection(s => s.QuotationProducts).Load();
+                    foreach(var qp in q.QuotationProducts)
+                    {
+                       context.Entry(qp).Reference(t=> t.Product).Load();
+                    }
                 }
                 return quotations;
             }
@@ -80,9 +90,17 @@ namespace TheConfigurator2000.Data
             using (var context = new Context.AppDbContext())
             {
 
-                var quotationProduct = new QuotationProduct() { QuotationId = quotation.Id, ProductId = product.Id };
+                var quotationProduct = context.QuotationProduct.Find(quotation.Id, product.Id);
 
-                context.Quotations.Find(quotation.Id).QuotationProducts.Add(quotationProduct);
+                if (quotationProduct == null) { 
+
+                    quotationProduct = new QuotationProduct() { QuotationId = quotation.Id, ProductId = product.Id };
+                    context.Quotations.Find(quotation.Id).QuotationProducts.Add(quotationProduct);
+                }
+                else
+                    quotationProduct.Count++;
+
+               
 
                 //context.Quotations.Find(quotation.Id).QuotationProducts.Find(quotationProduct.QuotationId,quotationProduct.ProductId).Count++;
 
@@ -96,13 +114,27 @@ namespace TheConfigurator2000.Data
             {
                 var quotationInDb = context.Quotations.Find(quotation.Id);
                 context.Entry(quotationInDb).Collection(s => s.QuotationProducts).Load();
-                //quotationInDb.QuotationProducts.Remove(context.Quotations.Find(quotation.Id), context.Products.Find(product.Id));
 
+
+                var quotationProduct = context.QuotationProduct.Find(quotation.Id, product.Id);
+                if (quotationProduct.Count > 1)
+                    quotationProduct.Count--;
+                else
+                    quotationInDb.QuotationProducts.Remove(quotationProduct);
                 context.SaveChanges();
-
-
-
             }
+        }
+
+        public int GetProductsCount(List<QuotationProduct> quotationProducts)
+        {
+            int tot = 0;
+
+            foreach(var product in quotationProducts)
+            {
+                    tot += product.Count;
+            }
+
+            return tot;
         }
     }
 }
