@@ -28,9 +28,9 @@ namespace TheConfigurator2000
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<IProductsService, ProductService>();
             services.AddSingleton<IQuotationService, QuotationService>();
+            services.AddSingleton<ICustomerService, CustomerService>();
             services.AddSingleton<IReportService, ReportService>();
             services.AddDbContext<TheConfigurator2000.Context.AppDbContext>();
         }

@@ -1,0 +1,55 @@
+﻿@page "/customers"
+@inject TheConfigurator2000.Data.ICustomerService CustomerService
+@inject NavigationManager Navigation
+
+<h3>Customers</h3>
+<a href="customer/0">Add customer</a>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in customers)
+        {
+            <tr>
+                <td>@customer.Id</td>
+                <td>@customer.Name</td>
+                <td>
+                    <button @onclick="@(p => OnEdit(customer.Id))" class="btn btn-primary">Edit</button>
+                    <button @onclick="@(p => OnDelete(customer.Id))" class="btn btn-dark">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+@code {
+
+    private List<Classes.Customer> customers;
+
+    protected override void OnInitialized()
+    {
+        Load();
+    }
+
+    private void OnDelete(Guid id)
+    {
+        CustomerService.DeleteCustomer(id);
+        Load();
+    }
+
+    private void OnEdit(Guid id)
+    {
+        Navigation.NavigateTo("customer/" + id);
+    }
+
+    private void Load()
+    {
+        customers = CustomerService.GetCustomers();
+    }
+}

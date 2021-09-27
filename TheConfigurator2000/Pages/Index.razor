@@ -1,7 +1,29 @@
 ﻿@page "/"
+@inject TheConfigurator2000.Data.IProductsService ProductService
+
 
 <h1>Hello, world!</h1>
+<h3>There are @nProducts products</h3>
+<h3>There are @nProducts quotations</h3>
 
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code{
+
+    int nProducts = 0;
+    int nQuotations = 0;
+
+    protected override void OnInitialized()
+    {
+        Load();
+    }
+
+    private void Load()
+    {
+        nProducts = 0;
+        nQuotations = 0;
+    }
+
+}

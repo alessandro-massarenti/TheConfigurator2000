@@ -19,6 +19,55 @@ namespace TheConfigurator2000.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("TheConfigurator2000.Classes.Contact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EMail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("createdDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("sysdatetimeoffset()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("TheConfigurator2000.Classes.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("createdDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("sysdatetimeoffset()");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("TheConfigurator2000.Classes.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -47,6 +96,9 @@ namespace TheConfigurator2000.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -56,6 +108,8 @@ namespace TheConfigurator2000.Migrations
                         .HasDefaultValueSql("sysdatetimeoffset()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Quotations");
                 });
@@ -83,6 +137,22 @@ namespace TheConfigurator2000.Migrations
                     b.ToTable("QuotationProduct");
                 });
 
+            modelBuilder.Entity("TheConfigurator2000.Classes.Contact", b =>
+                {
+                    b.HasOne("TheConfigurator2000.Classes.Customer", null)
+                        .WithMany("Contacts")
+                        .HasForeignKey("CustomerId");
+                });
+
+            modelBuilder.Entity("TheConfigurator2000.Classes.Quotation", b =>
+                {
+                    b.HasOne("TheConfigurator2000.Classes.Customer", "Customer")
+                        .WithMany("Quotations")
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("TheConfigurator2000.Classes.QuotationProduct", b =>
                 {
                     b.HasOne("TheConfigurator2000.Classes.Product", "Product")
@@ -100,6 +170,13 @@ namespace TheConfigurator2000.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Quotation");
+                });
+
+            modelBuilder.Entity("TheConfigurator2000.Classes.Customer", b =>
+                {
+                    b.Navigation("Contacts");
+
+                    b.Navigation("Quotations");
                 });
 
             modelBuilder.Entity("TheConfigurator2000.Classes.Product", b =>

@@ -15,6 +15,8 @@ namespace TheConfigurator2000.Context
         public DbSet<Product> Products { get; set; }
         public DbSet<Quotation> Quotations { get; set; }
         public DbSet<QuotationProduct> QuotationProduct { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

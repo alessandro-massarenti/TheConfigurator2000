@@ -10,6 +10,7 @@ namespace TheConfigurator2000.Classes
         public Guid Id { get; set; }
         public string Name { get; set; }
         public List<QuotationProduct> QuotationProducts { get; set; } = new();
+        public Customer Customer { get; set; }
 
         //public virtual ICollection<QuotationProductMapping> QuotationProductMappings { get; set; }
 
