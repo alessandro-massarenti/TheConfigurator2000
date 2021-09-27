@@ -22,5 +22,7 @@ namespace TheConfigurator2000.Data
 
         void AddProductToQuotation(Product product,Quotation quotation);
         void RemoveProductFromQuotation(Product product, Quotation quotation);
+
+        int GetProductsCount(List<QuotationProduct> quotationProducts);
     }
 }

@@ -9,64 +9,132 @@ namespace TheConfigurator2000.Data
     public class QuotationService : IQuotationService
     {
 
-        private List<Quotation> Quotations = new()
-        {
-            new Quotation
-            {
-                Id = Guid.NewGuid(),
-                Name = "Quotazione1",
-                Products = new()
-            },
-            new Quotation
-            {
-                Id = Guid.NewGuid(),
-                Name = "Qutoazione2",
-                Products = new()
-            }
-        };
-
-        public void AddProductToQuotation(Product product,Quotation quotation)
-        {
-            quotation.Products.Add(product);
-            UpdateQuotation(quotation);
-        }
 
         public void AddQuotation(Quotation quotation)
         {
-            var id = Guid.NewGuid();
-            quotation.Id = id;
-            Quotations.Add(quotation);
+            if (quotation.Id == Guid.Empty)
+            {
+                quotation.Id = Guid.NewGuid();
+            }
+            using (var context = new Context.AppDbContext())
+            {
+                context.Quotations.Add(quotation);
+                context.SaveChanges();
+            }
         }
 
         public void DeleteQuotation(Guid id)
         {
-            var quotation = GetQuotation(id);
-            Quotations.Remove(quotation);
+            using var context = new Context.AppDbContext();
+            context.Quotations.Remove(GetQuotation(id));
+            context.SaveChanges();
         }
 
         public Quotation GetQuotation(Guid id)
         {
-            return Quotations.SingleOrDefault(x => x.Id == id);
+            using var context = new Context.AppDbContext();
+            //var q = context.Quotations.First();
+            ////List<TheConfigurator2000.Classes.Product> products = context.Quotations.First().Products.ToList();
+
+            ////Carica i prodotti
+            //context.Entry(q).Collection(s => s.Products).Load();
+
+            var quotation = context.Quotations.SingleOrDefault(q => q.Id == id);
+            if (quotation != null)
+            {
+                context.Entry(quotation).Collection(s => s.QuotationProducts).Load();
+                foreach (var qp in quotation.QuotationProducts)
+                {
+                    context.Entry(qp).Reference(t => t.Product).Load();
+                }
+            }
+
+            return quotation;
         }
 
         public List<Quotation> GetQuotations()
         {
-            return Quotations;
-        }
+            using (var context = new Context.AppDbContext())
+            {
 
-        public void RemoveProductFromQuotation(Product product, Quotation quotation)
-        {
-            quotation.Products.Remove(product);
-            UpdateQuotation(quotation);
+                List<Quotation> quotations = context.Quotations.ToList();
+                foreach (var q in quotations)
+                {
+                    context.Entry(q).Collection(s => s.QuotationProducts).Load();
+                    foreach(var qp in q.QuotationProducts)
+                    {
+                       context.Entry(qp).Reference(t=> t.Product).Load();
+                    }
+                }
+                return quotations;
+            }
         }
 
         public void UpdateQuotation(Quotation quotation)
         {
-            var oldQuotation = GetQuotation(quotation.Id);
 
-            oldQuotation.Name = quotation.Name;
-            oldQuotation.Products = quotation.Products;
+            using (var context = new Context.AppDbContext())
+            {
 
+                var oldQuotation = context.Quotations.Find(quotation.Id);
+
+                oldQuotation.Name = quotation.Name;
+
+                context.SaveChanges();
+            }
+
+        }
+
+        public void AddProductToQuotation(Product product, Quotation quotation)
+        {
+            using (var context = new Context.AppDbContext())
+            {
+
+                var quotationProduct = context.QuotationProduct.Find(quotation.Id, product.Id);
+
+                if (quotationProduct == null) { 
+
+                    quotationProduct = new QuotationProduct() { QuotationId = quotation.Id, ProductId = product.Id };
+                    context.Quotations.Find(quotation.Id).QuotationProducts.Add(quotationProduct);
+                }
+                else
+                    quotationProduct.Count++;
+
+               
+
+                //context.Quotations.Find(quotation.Id).QuotationProducts.Find(quotationProduct.QuotationId,quotationProduct.ProductId).Count++;
+
+                context.SaveChanges();
+            }
+        }
+
+        public void RemoveProductFromQuotation(Product product, Quotation quotation)
+        {
+            using (var context = new Context.AppDbContext())
+            {
+                var quotationInDb = context.Quotations.Find(quotation.Id);
+                context.Entry(quotationInDb).Collection(s => s.QuotationProducts).Load();
+
+
+                var quotationProduct = context.QuotationProduct.Find(quotation.Id, product.Id);
+                if (quotationProduct.Count > 1)
+                    quotationProduct.Count--;
+                else
+                    quotationInDb.QuotationProducts.Remove(quotationProduct);
+                context.SaveChanges();
+            }
+        }
+
+        public int GetProductsCount(List<QuotationProduct> quotationProducts)
+        {
+            int tot = 0;
+
+            foreach(var product in quotationProducts)
+            {
+                    tot += product.Count;
+            }
+
+            return tot;
         }
     }
 }

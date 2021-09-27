@@ -1,5 +1,6 @@
 ﻿@page "/quotations"
 @inject TheConfigurator2000.Data.IQuotationService QuotationService
+@inject TheConfigurator2000.Data.IReportService ReportService
 @inject NavigationManager Navigation
 
 <h3>Quotations</h3>
@@ -11,6 +12,7 @@
             <td>Id</td>
             <td>Name</td>
             <td>Products inserted</td>
+            <td>Total</td>
             <td></td>
         </tr>
     </thead>
@@ -20,10 +22,12 @@
         <tr>
             <td>@quotation.Id</td>
             <td>@quotation.Name</td>
-            <td>@quotation.Products.Count</td>
+            <td>@getProductsCount(quotation.QuotationProducts)</td>
+            <td>€ @quotation.GetTotalPrice()</td>
             <td>
                 <button @onclick="@(p => OnEdit(quotation.Id))" class="btn btn-primary">Edit</button>
                 <button @onclick="@(p => OnDelete(quotation.Id))" class="btn btn-dark">Delete</button>
+                <button @onclick="@(p => OnPrint(quotation))" class="btn btn-info">Print</button>
             </td>
         </tr>
         }
@@ -47,6 +51,17 @@
     private void OnEdit(Guid id)
     {
         Navigation.NavigateTo("quotation/" + id);
+    }
+
+    private void OnPrint(Classes.Quotation quotation)
+    {
+        ReportService.GenerateReport(quotation);
+        Navigation.NavigateTo($"file:///C:/Users/amc002/Downloads/" + quotation.Name + ".pdf", forceLoad: true);
+    }
+
+    private string getProductsCount(List<Classes.QuotationProduct> quotationProducts)
+    {
+        return QuotationService.GetProductsCount(quotationProducts).ToString();
     }
 
 
