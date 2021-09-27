@@ -22,7 +22,7 @@
         <tr>
             <td>@quotation.Id</td>
             <td>@quotation.Name</td>
-            <td>@quotation.Products.Count</td>
+            <td>@getProductsCount(quotation.QuotationProducts)</td>
             <td>€ @quotation.GetTotalPrice()</td>
             <td>
                 <button @onclick="@(p => OnEdit(quotation.Id))" class="btn btn-primary">Edit</button>
@@ -57,6 +57,11 @@
     {
         ReportService.GenerateReport(quotation);
         Navigation.NavigateTo($"file:///C:/Users/amc002/Downloads/" + quotation.Name + ".pdf", forceLoad: true);
+    }
+
+    private string getProductsCount(List<Classes.QuotationProduct> quotationProducts)
+    {
+        return QuotationService.GetProductsCount(quotationProducts).ToString();
     }
 
 

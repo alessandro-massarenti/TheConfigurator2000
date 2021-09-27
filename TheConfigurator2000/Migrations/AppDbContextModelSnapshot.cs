@@ -19,26 +19,6 @@ namespace TheConfigurator2000.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ProductQuotation", b =>
-                {
-                    b.Property<Guid>("ProductsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QuotationsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("createdDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("sysdatetimeoffset()");
-
-                    b.HasKey("ProductsId", "QuotationsId");
-
-                    b.HasIndex("QuotationsId");
-
-                    b.ToTable("ProductQuotation");
-                });
-
             modelBuilder.Entity("TheConfigurator2000.Classes.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -61,16 +41,6 @@ namespace TheConfigurator2000.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("TheConfigurator2000.Classes.ProductQuotation", b =>
-                {
-                    b.Property<DateTimeOffset>("createdDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("sysdatetimeoffset()");
-
-                    b.ToTable("ProductQuotations");
-                });
-
             modelBuilder.Entity("TheConfigurator2000.Classes.Quotation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -90,19 +60,56 @@ namespace TheConfigurator2000.Migrations
                     b.ToTable("Quotations");
                 });
 
-            modelBuilder.Entity("ProductQuotation", b =>
+            modelBuilder.Entity("TheConfigurator2000.Classes.QuotationProduct", b =>
                 {
-                    b.HasOne("TheConfigurator2000.Classes.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
+                    b.Property<Guid>("QuotationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("createdDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("sysdatetimeoffset()");
+
+                    b.HasKey("QuotationId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("QuotationProduct");
+                });
+
+            modelBuilder.Entity("TheConfigurator2000.Classes.QuotationProduct", b =>
+                {
+                    b.HasOne("TheConfigurator2000.Classes.Product", "Product")
+                        .WithMany("QuotationProducts")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TheConfigurator2000.Classes.Quotation", null)
-                        .WithMany()
-                        .HasForeignKey("QuotationsId")
+                    b.HasOne("TheConfigurator2000.Classes.Quotation", "Quotation")
+                        .WithMany("QuotationProducts")
+                        .HasForeignKey("QuotationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Quotation");
+                });
+
+            modelBuilder.Entity("TheConfigurator2000.Classes.Product", b =>
+                {
+                    b.Navigation("QuotationProducts");
+                });
+
+            modelBuilder.Entity("TheConfigurator2000.Classes.Quotation", b =>
+                {
+                    b.Navigation("QuotationProducts");
                 });
 #pragma warning restore 612, 618
         }
